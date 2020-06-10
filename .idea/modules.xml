@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auto_scan.iml" filepath="$PROJECT_DIR$/.idea/modules/auto_scan.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auto_scan.main.iml" filepath="$PROJECT_DIR$/.idea/modules/auto_scan.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auto_scan.test.iml" filepath="$PROJECT_DIR$/.idea/modules/auto_scan.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auto_scan_main.iml" filepath="$PROJECT_DIR$/.idea/modules/auto_scan_main.iml" group="auto_scan" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/auto_scan_test.iml" filepath="$PROJECT_DIR$/.idea/modules/auto_scan_test.iml" group="auto_scan" />
+    </modules>
+  </component>
+</project>
