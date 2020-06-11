@@ -11,11 +11,9 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,8 +25,8 @@ public class SiteParser {
     private ViewedHistoryRepository viewedRepository;
     private static final Logger LOGGER = Logger.getLogger(SiteParser.class.getSimpleName());
 
-    public String getNew(String filterUrl, User user) throws IOException {
-        StringBuilder sbInfo = new StringBuilder();
+    public List<String> getNew(String filterUrl, User user) throws IOException {
+        List<String> result = new ArrayList<>();
         List<ViewedHistory> viewedHistory = new ArrayList<>();
 
         Document doc = Jsoup.connect(filterUrl)
@@ -38,14 +36,15 @@ public class SiteParser {
         Elements elements = doc.select("#rst-page-1");
         if (elements.isEmpty()) {
             LOGGER.log(Level.SEVERE, "Url: " + filterUrl + " User: " + user.getId());
-            return "";
+            return new ArrayList<>();
         }
         Element el = elements.get(0);
         for (Node node : el.childNodes()) {
             String nodeId = "#" + node.attr("id");
-            if (!nodeId.contains("rst-ocid")){
+            if (!nodeId.contains("rst-ocid")) {
                 continue;
             }
+            StringBuilder sbInfo = new StringBuilder();
 
             String title = node.childNode(0).childNode(1).childNode(0).childNode(0).outerHtml();
             boolean isToday = el.select(nodeId + " > div.rst-ocb-i-s > strong").text().contains("сегодня");
@@ -71,7 +70,7 @@ public class SiteParser {
                     .append("URL: " + "https://rst.ua" + uri)
                     .append("\n").append("\n");
 
-
+            result.add(sbInfo.toString());
             viewedHistory.add(new ViewedHistory(user, nodeId, LocalDate.now()));
         }
         if (!viewedHistory.isEmpty()) {
@@ -79,6 +78,6 @@ public class SiteParser {
         }
 
 
-        return sbInfo.toString();
+        return result;
     }
 }

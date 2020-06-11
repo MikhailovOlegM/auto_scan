@@ -45,16 +45,17 @@ public class NotificationHandler {
     7.Year (optional field)
      */
 
-    @Scheduled(cron = "0 0/10 * * * ?")
+//    @Scheduled(cron = "0 0/10 * * * ?")
+    @Scheduled(fixedRate = 5000)
     public void sendNotification() {
         List<User> allUsers = (List<User>) repository.findAll();
         allUsers.parallelStream().forEach(user -> {
             for (FilterUrl filter : user.getUserFilterUrl()) {
 
                 try {
-                    String response = siteParser.getNew(filter.getUrl(), user);
-                    if (!response.isEmpty()) {
-                        telegramManager.sendMsg(String.valueOf(user.getChat_id()), response, null);
+                    List<String> responseArr = siteParser.getNew(filter.getUrl(), user);
+                    if (!responseArr.isEmpty()) {
+                        telegramManager.sendMsg(String.valueOf(user.getChat_id()), responseArr);
                     }
 
                 } catch (IOException e) {

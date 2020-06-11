@@ -148,6 +148,26 @@ public class FilterBotTelegramManager {
         }
     }
 
+    /**
+     * NotificationHandler
+     */
+    public synchronized void sendMsg(String chatId, List<String> arrayMsg) {
+        for (String msg : arrayMsg) {
+
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.enableMarkdown(true);
+            sendMessage.setChatId(chatId);
+            sendMessage.enableHtml(true);
+            sendMessage.setText(msg);
+
+            try {
+                this.bot.execute(sendMessage);
+            } catch (TelegramApiException e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+    }
+
 
     public void managedCallbackMsg(CallbackQuery msg) {
         SendMessage sendMessage = new SendMessage();
