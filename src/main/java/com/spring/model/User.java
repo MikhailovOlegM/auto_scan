@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "user")
@@ -26,6 +27,9 @@ public class User {
 
     @OneToMany(mappedBy = "userFilter", fetch = FetchType.EAGER)
     private Set<FilterUrl> userFilterUrl = new HashSet<>();
+
+    @OneToMany(mappedBy = "userViewedHistory", fetch = FetchType.EAGER)
+    private Set<ViewedHistory> userViewedHistory = new HashSet<>();
 
     public Set<FilterUrl> getUserFilterUrl() {
         return userFilterUrl;
@@ -57,5 +61,12 @@ public class User {
 
     public Long getChat_id() {
         return chat_id;
+    }
+
+    public Set<ViewedHistory> getUserViewedHistory() {
+        return userViewedHistory;
+    }
+    public Set<String> getUserViewedHistoryId() {
+        return userViewedHistory.stream().map(ViewedHistory::getSiteId).collect(Collectors.toSet());
     }
 }
