@@ -45,8 +45,8 @@ public class NotificationHandler {
     7.Year (optional field)
      */
 
-//    @Scheduled(cron = "0 0/10 * * * ?")
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(cron = "0 0/10 * * * ?")
+//    @Scheduled(fixedRate = 5000)
     public void sendNotification() {
         List<User> allUsers = (List<User>) repository.findAll();
         allUsers.parallelStream().forEach(user -> {

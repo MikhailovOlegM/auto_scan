@@ -7,6 +7,7 @@ import com.spring.repository.FilterRespository;
 import com.spring.repository.UserRepository;
 import com.spring.service.Constant.Command;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -37,7 +38,7 @@ public class FilterBotTelegramManager {
     private final Stack<String> operation = new Stack<>();
 
     private static final Logger LOGGER = Logger.getLogger(TelegramBot.class.getName());
-    private static final String REGULAR = "((\\w+:\\/\\/)rst.ua\\/[-a-zA-Z0-9:@;?&=\\/%\\+\\.\\*!'\\(\\),\\$_\\{\\}\\^~\\[\\]`#|]+)";
+    private static final String REGULAR = "(\\w+:\\/\\/)(rst.ua|m.rst.ua)\\/[-a-zA-Z0-9:@;?&=\\/%\\+\\.\\*!'\\(\\),\\$_\\{\\}\\^~\\[\\]`#|]+";
 
     private TelegramBot bot;
     private Map<Long, Boolean> isAddFilterMap = new HashMap<>();
@@ -172,7 +173,11 @@ public class FilterBotTelegramManager {
     public void managedCallbackMsg(CallbackQuery msg) {
         SendMessage sendMessage = new SendMessage();
         String id = msg.getData();
-        filterRep.deleteById(Integer.valueOf(id));
+        try {
+            filterRep.deleteById(Integer.valueOf(id));
+        } catch (EmptyResultDataAccessException ex) {
+            return;
+        }
         sendMessage.setText("Фильрт удалён.")
                 .setChatId(msg.getMessage().getChatId());
 
@@ -222,7 +227,7 @@ public class FilterBotTelegramManager {
             user = new User();
             String name = msg.getFrom().getUserName();
             String firstName = msg.getFrom().getFirstName();
-            user.setUser_name(name);
+            user.setUser_name(name == null ? firstName : name);
             user.setFirst_name(firstName);
             user.setChatIt(chatId);
             userRep.save(user);
